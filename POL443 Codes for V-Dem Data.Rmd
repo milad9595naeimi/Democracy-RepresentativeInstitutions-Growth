@@ -1,0 +1,510 @@
+---
+title: "POL443 Research Proposal"
+author: "Milad Naeimi"
+date: "2023-03-08"
+output: pdf_document
+---
+
+
+
+
+####Install the necessar libraries
+```{r}
+#install.packages("blavaan")
+#library(blavaan)
+library(readxl) #Import Excel Files into R
+#install.packages("curl")
+library(curl) #Connection Interface
+library(data.table) #Data Management
+#install.packages("tidyr")
+#install.packages("dplyr")
+library(tidyr)# Data Management
+library(dplyr)#Data Management
+#install.packages("ggplot2")
+library(ggplot2)#plot
+library(scales)#Graphical Tools
+library(stringr)#String Manipulation
+#install.packages("haven")
+library(haven)
+#install.packages("stacks")
+library(stacks)
+#install.packages("plyr")
+library(plyr)
+#install.packages("tidyverse")
+library(tidyverse)
+library(dplyr)
+library(ggrepel)
+library(forcats)
+library(scales)
+#install.packages("ggpmisc")                         
+library("ggpmisc")
+#install.packages("stargazer")
+library(stargazer)
+library(wooldridge)
+library(lmtest)
+library(sandwich)
+library(margins)
+library(car)
+#install.packages('writexl')
+library(writexl)
+library(readr)
+library(data.table)
+#install.packages("fastDummies")
+library(fastDummies)
+#install.packages("scales")
+library(scales)
+```
+
+
+
+
+####Setting the root File
+```{r}
+getwd()
+setwd("C:/Users/milad/OneDrive/Desktop/University of Toronto/Courses/2023/Winter/POL443 Topics in Compartive Perspective (State and Development in Historical)/Dataset/V-Dem Datasets/V-Dem-CY-FullOthers_csv_v13")
+getwd()
+```
+
+
+####Read Data
+```{r}
+dataset1 <- read.csv("V-Dem-CY-Full+Others-v13.csv")
+View(dataset1)
+```
+
+
+
+
+####Scatterplot of Legislature questions officials in practice (v2lgqstexp)=x; GDP Per Capita Growth (log(e_gdppc))=y
+```{r}
+#Question: In practice, does the legislature routinely question executive branch officials?
+#Clarification: By ”question” we mean, for example, the power of summons through which the head of state or head of government could be forced to explain its policies or testify
+#Responses:
+#0: No — never or very rarely.
+#1: Yes — routinely.
+
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2lgqstexp_mean, y=log(e_gdppc))) + 
+  geom_point() +
+  labs(title= 'The Effect of Parliament Power on Economic Growth', y= 'GDP Per Capita Growth', x='Legislature questions officials in practice (0-1)') +
+  stat_smooth(method = 'lm')
+ggsave("Parliament.Power.on.growth.1.png")
+```
+
+
+
+
+
+####Scatterplot of Legislature investigates in practice (v2lginvstp)=x; and GDP Per Capita Growth (log(e_gdppc))=y
+```{r}
+#Question: If the executive were engaged in unconstitutional, illegal, or unethical activity, how likely is it that a legislative body (perhaps a whole chamber, perhaps a committee, whether aligned with government or opposition) would conduct an investigation that would result in a decision or report that is unfavorable to the executive?
+
+#Responses:
+#0: Extremely unlikely.
+#1: Unlikely.
+#2: As likely as not.
+#3: Likely.
+#4: Certain or nearly certain.
+
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2lginvstp_mean, y=log(e_gdppc))) + 
+  geom_point() +
+  labs(title= 'The Effect of Parliament Power on Economic Growth', x='Legislature investigates in practice Between 0-4', y= 'GDP Per Capita Growth') +
+  stat_smooth(method = 'lm')
+ggsave("Parliament.Power.on.growth.2.png")
+```
+
+
+
+####Scatterplot of Executive oversight (v2lgotovst)=x; and GDP Per Capita Growth (log(e_gdppc))=y
+```{r}
+#Question: If executive branch officials were engaged in unconstitutional, illegal, or unethical activity, how likely is it that a body other than the legislature, such as a comptroller general, general prosecutor, or ombudsman, would question or investigate them and issue an unfavorable decision or report?
+
+#Responses:
+#0: Extremely unlikely.
+#1: Unlikely.
+#2: As likely as not.
+#3: Likely.
+#4: Certain or nearly certain.
+
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2lgotovst_mean, y=log(e_gdppc))) + 
+  geom_point() +
+  labs(title= 'The Effect of Parliament Power on Economic Growth', x='Executive oversight 0-4', y= 'GDP Per Capita Growth') +
+  stat_smooth(method = 'lm')
+ggsave("Parliament.Power.on.growth.3.png")
+```
+
+
+
+
+####Scatterplot of Legislature questions officials in practice (v2lgqstexp)=x; and State authority over territory (v2svstterr)=y
+```{r}
+# (Legislature Questions Officials in Practice) #Question: In practice, does the legislature routinely question executive branch officials?
+#Clarification: By ”question” we mean, for example, the power of summons through which the head of state or head of government could be forced to explain its policies or testify
+#Responses:
+#0: No — never or very rarely.
+#1: Yes — routinely.
+
+
+# (State Authority Over Territory) Question: Over what percentage (%) of the territory does the state have effective control?
+#Clarification: With this question we seek to judge the extent of recognition of the preeminent authority of the state over its territory. We are not interested here in perfect control by the state, or whether it is relatively effective in comparison to other states, but an assessment of the areas over which it is hegemonic, e.g. where it is recognized as the preeminent authority and in a contest of wills it can assert its control over political forces that reject its authority. Several illustrative examples may help in this coding. During civil wars the claim of the state to rule is effectively neutralized by insurgent groups (e.g., the Tamil Tigers in Sri Lanka). There are also situations in which criminals or warlords exert control in contravention of state authority (e.g. opium growers in parts of Indochina). There are also cases of failed states where the central government cannot assert control over a share of its territory (e.g., contemporary Somalia). Here, we ask you to estimate the size of the territory that the state has effective control over, as a percentage (%) of the total territory that is officially part of the country.
+
+
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2lgqstexp_mean, y=v2svstterr_mean)) + 
+  geom_point() +
+  labs(title= 'The Effect of Parliament Power on State Infrastrcutural Power', y= 'State authority over territory (%)', x='Legislature questions officials in practice (0-1)') +
+  stat_smooth(method = 'lm')
+ggsave("Parliament-sovereign.power1.png")
+```
+
+
+
+
+####Scatterplot of  Legislature investigates in practice (v2lginvstp)=x; and State authority over territory (v2svstterr)=y
+```{r}
+# (Legislature investigates in practice) Question: If the executive were engaged in unconstitutional, illegal, or unethical activity, how likely is it that a legislative body (perhaps a whole chamber, perhaps a committee, whether aligned with government or opposition) would conduct an investigation that would result in a decision or report that is unfavorable to the executive?
+
+#Responses:
+#0: Extremely unlikely.
+#1: Unlikely.
+#2: As likely as not.
+#3: Likely.
+#4: Certain or nearly certain.
+
+# (State Authority Over Territory) Question: Over what percentage (%) of the territory does the state have effective control?
+#Clarification: With this question we seek to judge the extent of recognition of the preeminent authority of the state over its territory. We are not interested here in perfect control by the state, or whether it is relatively effective in comparison to other states, but an assessment of the areas over which it is hegemonic, e.g. where it is recognized as the preeminent authority and in a contest of wills it can assert its control over political forces that reject its authority. Several illustrative examples may help in this coding. During civil wars the claim of the state to rule is effectively neutralized by insurgent groups (e.g., the Tamil Tigers in Sri Lanka). There are also situations in which criminals or warlords exert control in contravention of state authority (e.g. opium growers in parts of Indochina). There are also cases of failed states where the central government cannot assert control over a share of its territory (e.g., contemporary Somalia). Here, we ask you to estimate the size of the territory that the state has effective control over, as a percentage (%) of the total territory that is officially part of the country.
+
+
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2lginvstp_mean, y=v2svstterr_mean)) + 
+  geom_point() +
+  labs(title= 'The Effect of Parliament Power on State Infrastrcutural Power', y= 'State authority over territory (%)', x='Legislature investigates in practice Between 0-4') +
+  stat_smooth(method = 'lm')
+ggsave("Parliament-sovereign.power2.png")
+```
+
+
+
+
+
+####Scatterplot of  Executive oversight (v2lgotovst)=x; and State authority over territory (v2svstterr)=y
+```{r}
+#Question: If executive branch officials were engaged in unconstitutional, illegal, or unethical activity, how likely is it that a body other than the legislature, such as a comptroller general, general prosecutor, or ombudsman, would question or investigate them and issue an unfavorable decision or report?
+
+#Responses:
+#0: Extremely unlikely.
+#1: Unlikely.
+#2: As likely as not.
+#3: Likely.
+#4: Certain or nearly certain.
+
+# (State Authority Over Territory) Question: Over what percentage (%) of the territory does the state have effective control?
+#Clarification: With this question we seek to judge the extent of recognition of the preeminent authority of the state over its territory. We are not interested here in perfect control by the state, or whether it is relatively effective in comparison to other states, but an assessment of the areas over which it is hegemonic, e.g. where it is recognized as the preeminent authority and in a contest of wills it can assert its control over political forces that reject its authority. Several illustrative examples may help in this coding. During civil wars the claim of the state to rule is effectively neutralized by insurgent groups (e.g., the Tamil Tigers in Sri Lanka). There are also situations in which criminals or warlords exert control in contravention of state authority (e.g. opium growers in parts of Indochina). There are also cases of failed states where the central government cannot assert control over a share of its territory (e.g., contemporary Somalia). Here, we ask you to estimate the size of the territory that the state has effective control over, as a percentage (%) of the total territory that is officially part of the country.
+
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2lgotovst_mean, y=v2svstterr_mean)) + 
+  geom_point() +
+  labs(title= 'The Effect of Parliament Power on State Infrastrcutural Power', y= 'State authority over territory (%)', x='Executive oversight Between 0-4') +
+  stat_smooth(method = 'lm')
+ggsave("Parliament-sovereign.power3.png")
+```
+
+
+
+
+
+
+
+
+
+
+
+####Scatterplot of  State authority over territory (v2svstterr)=x; and GDP Per Capita Growth (log(e_gdppc))=y
+```{r}
+# (State Authority Over Territory) Question: Over what percentage (%) of the territory does the state have effective control?
+#Clarification: With this question we seek to judge the extent of recognition of the preeminent authority of the state over its territory. We are not interested here in perfect control by the state, or whether it is relatively effective in comparison to other states, but an assessment of the areas over which it is hegemonic, e.g. where it is recognized as the preeminent authority and in a contest of wills it can assert its control over political forces that reject its authority. Several illustrative examples may help in this coding. During civil wars the claim of the state to rule is effectively neutralized by insurgent groups (e.g., the Tamil Tigers in Sri Lanka). There are also situations in which criminals or warlords exert control in contravention of state authority (e.g. opium growers in parts of Indochina). There are also cases of failed states where the central government cannot assert control over a share of its territory (e.g., contemporary Somalia). Here, we ask you to estimate the size of the territory that the state has effective control over, as a percentage (%) of the total territory that is officially part of the country.
+
+
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2svstterr_mean, y=log(e_gdppc))) + 
+  geom_point() +
+  labs(title= 'The Effect of State Infrastrcutural Power on Income Grwoth', y= 'GDP Per Capita Growth', x='State authority over territory (%)') +
+  stat_smooth(method = 'lm')
+ggsave("State.power.effect.on.growth1.png")
+```
+
+
+
+
+
+####Scatterplot of  Core civil society index (v2xcs_ccsi)=x; and GDP Per Capita Growth (log(e_gdppc))=y
+```{r}
+# (Core Civil Society Index) Question: How robust is civil society? Clarification: The sphere of civil society lies in the public space between the private sphere and the state. Here, citizens organize in groups to pursue their collective interests and ideals. We call these groups civil society organizations CSOs. CSOs include, but are by no means limited to, interest groups, labor unions, spiritual organizations if they are engaged in civic or political activities, social movements, professional associations, charities, and other non-governmental organizations. The core civil society index CCSI is designed to provide a measure of a robust civil society, understood as one that enjoys autonomy from the state and in which citizens freely and actively pursue their political and civic goals, however conceived.
+
+
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2xcs_ccsi, y=log(e_gdppc))) + 
+  geom_point() +
+  labs(title= 'The Effect of Civil Society on Income Grwoth', y= 'GDP Per Capita Growth', x='Core Civil Society Index Between 0-1') +
+  stat_smooth(method = 'lm')
+ggsave("civil.society.power.effect.on.growth1.png")
+```
+
+
+
+
+
+
+####Scatterplot of Core civil society index (v2xcs_ccsi)=x; and  State authority over territory (v2svstterr)=y;
+```{r}
+# (Core Civil Society Index) Question: How robust is civil society? Clarification: The sphere of civil society lies in the public space between the private sphere and the state. Here, citizens organize in groups to pursue their collective interests and ideals. We call these groups civil society organizations CSOs. CSOs include, but are by no means limited to, interest groups, labor unions, spiritual organizations if they are engaged in civic or political activities, social movements, professional associations, charities, and other non-governmental organizations. The core civil society index CCSI is designed to provide a measure of a robust civil society, understood as one that enjoys autonomy from the state and in which citizens freely and actively pursue their political and civic goals, however conceived.
+
+# (State Authority Over Territory) Question: Over what percentage (%) of the territory does the state have effective control?
+#Clarification: With this question we seek to judge the extent of recognition of the preeminent authority of the state over its territory. We are not interested here in perfect control by the state, or whether it is relatively effective in comparison to other states, but an assessment of the areas over which it is hegemonic, e.g. where it is recognized as the preeminent authority and in a contest of wills it can assert its control over political forces that reject its authority. Several illustrative examples may help in this coding. During civil wars the claim of the state to rule is effectively neutralized by insurgent groups (e.g., the Tamil Tigers in Sri Lanka). There are also situations in which criminals or warlords exert control in contravention of state authority (e.g. opium growers in parts of Indochina). There are also cases of failed states where the central government cannot assert control over a share of its territory (e.g., contemporary Somalia). Here, we ask you to estimate the size of the territory that the state has effective control over, as a percentage (%) of the total territory that is officially part of the country.
+
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2xcs_ccsi, y=v2svstterr_mean)) + 
+  geom_point() +
+  labs(title= 'The Effect of Civil Society Power on State Infrastrcutural Power', y= 'State Authority Over Territory (%)', x='Core Civil Society Index Between 0-1') +
+  stat_smooth(method = 'lm')
+ggsave("civil.society.power.on.state.power.png")
+```
+
+
+
+
+####Scatterplot of State authority over territory (v2svstterr)=x; and Property rights (v2xcl_prpty)
+```{r}
+# (State Authority Over Territory) Question: Over what percentage (%) of the territory does the state have effective control?
+#Clarification: With this question we seek to judge the extent of recognition of the preeminent authority of the state over its territory. We are not interested here in perfect control by the state, or whether it is relatively effective in comparison to other states, but an assessment of the areas over which it is hegemonic, e.g. where it is recognized as the preeminent authority and in a contest of wills it can assert its control over political forces that reject its authority. Several illustrative examples may help in this coding. During civil wars the claim of the state to rule is effectively neutralized by insurgent groups (e.g., the Tamil Tigers in Sri Lanka). There are also situations in which criminals or warlords exert control in contravention of state authority (e.g. opium growers in parts of Indochina). There are also cases of failed states where the central government cannot assert control over a share of its territory (e.g., contemporary Somalia). Here, we ask you to estimate the size of the territory that the state has effective control over, as a percentage (%) of the total territory that is officially part of the country.
+
+# (Property Rights) Question: Do citizens enjoy the right to private property? Clarification: Private property includes the right to acquire, possess, inherit, and sell private property, including land. Limits on property rights may come from the state which may legally limit rights or fail to enforce them; customary laws and practices; or religious or social norms. This question concerns the right to private property, not actual ownership of property. 
+#Scale: Interval, from low to high (0-1).
+
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2svstterr_mean, y=v2xcl_prpty)) + 
+  geom_point() +
+  labs(title= 'The Effect of State Infrastrcutural Power on Propert Rights', x= 'State Authority Over Territory (%)', y='Property Rights between 0-1') +
+  stat_smooth(method = 'lm')
+ggsave("state.power.property.rights.png")
+```
+
+
+
+
+####Scatterplot of State authority over territory (v2svstterr)=x; and Lagged Property rights (v2xcl_prpty) for 5 years
+```{r}
+# (State Authority Over Territory) Question: Over what percentage (%) of the territory does the state have effective control?
+#Clarification: With this question we seek to judge the extent of recognition of the preeminent authority of the state over its territory. We are not interested here in perfect control by the state, or whether it is relatively effective in comparison to other states, but an assessment of the areas over which it is hegemonic, e.g. where it is recognized as the preeminent authority and in a contest of wills it can assert its control over political forces that reject its authority. Several illustrative examples may help in this coding. During civil wars the claim of the state to rule is effectively neutralized by insurgent groups (e.g., the Tamil Tigers in Sri Lanka). There are also situations in which criminals or warlords exert control in contravention of state authority (e.g. opium growers in parts of Indochina). There are also cases of failed states where the central government cannot assert control over a share of its territory (e.g., contemporary Somalia). Here, we ask you to estimate the size of the territory that the state has effective control over, as a percentage (%) of the total territory that is officially part of the country.
+
+# (Property Rights) Question: Do citizens enjoy the right to private property? Clarification: Private property includes the right to acquire, possess, inherit, and sell private property, including land. Limits on property rights may come from the state which may legally limit rights or fail to enforce them; customary laws and practices; or religious or social norms. This question concerns the right to private property, not actual ownership of property. 
+#Scale: Interval, from low to high (0-1).
+
+#Create a Lagged variable for property rights for 5 years 
+dataset1$v2xcl_prpty_lagged5 <- lag(dataset1$v2xcl_prpty, 5)
+#plot logistic regression curve
+ggplot(dataset1, aes(x=v2svstterr_mean, y=v2xcl_prpty_lagged5)) + 
+  geom_point() +
+  labs(title= 'The Effect of State Infrastrcutural Power on Propert Rights', x= 'State Authority Over Territory (%)', y='Five Years Lagged Property Rights between 0-1') +
+  stat_smooth(method = 'lm')
+ggsave("state.power.lagged.5.years.on.property.rights.png")
+```
+
+
+
+
+####Regression results for the relationship between regime support group and economic growth
+```{r}
+library(plm)
+regime_growth1 <- plm(log(e_gdppc) ~ v2regsupgroups_0 + v2regsupgroups_1 + v2regsupgroups_2 + v2regsupgroups_3 + v2regsupgroups_4 + v2regsupgroups_5 + v2regsupgroups_6 + v2regsupgroups_7 + v2regsupgroups_8 + v2regsupgroups_9 + v2regsupgroups_10 + v2regsupgroups_11 + v2regsupgroups_12 + v2regsupgroups_13, data = dataset1, 
+               index=c("country_name","year"), model="within", effect = "twoways")
+summary(regime_growth1)
+```
+
+####Report the Regression Results in a Table
+```{r}
+stargazer(regime_growth1, type = "html",
+          dep.var.labels = c("Economic Grwoth"), title = "Table 1: Regression Results of Bivariate Relationship Between Regime support groups and Economic Grwoth",
+          covariate.labels = c("The aristocracy, including high status hereditary social groups and castes", "Agrarian elites, including rich peasants and large landholders", "Party elites (of the party or parties that control the executive)", "Business elites", "The state bureaucracy", "The military", "An ethnic or racial group(s)", "A religious group(s)", "Local elites, including customary chiefs", "Urban working classes, including labor unions", "Urban middle classes", "Rural working classes", "Rural middle classes (e.g., family farmers)", "A foreign government or colonial power"),
+          out = "Table1.html")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+####Scatterplot of Institutionalized democracy (e_democ)=x; and GDP Per Capita Growth (log(e_gdppc))=y
+```{r}
+library(ggplot2)
+#omitting values smaller than -10
+dataset1 <- dataset1 %>%
+mutate(e_p_polity = ifelse(e_p_polity <= -10 , NA, e_p_polity))
+
+#omitting values smaller than 0
+dataset1 <- dataset1 %>%
+mutate(e_democ = ifelse(e_democ <= 0 , NA, e_democ))
+
+#omitting values smaller than 0
+dataset1 <- dataset1 %>%
+mutate(e_autoc = ifelse(e_autoc <= 0 , NA, e_autoc))
+
+
+ggplot(dataset1, aes(x=e_p_polity, y=log(e_gdppc))) + 
+  geom_point() +
+  labs(title= 'The Effect of Institutionalized Democracy on Grwoth', x= 'Institutionalized Democracy Between 0-1', y='GDP Per Capita Growth') +
+  stat_smooth(method = 'lm')
+ggsave("democracy.index.on.growth1.png")
+```
+
+
+
+
+####Scatterplot of State Census (v3stcensus)=x (As a Proxy for State Information for state Capacity); and GDP Per Capita Growth (log(e_gdppc))=y
+```{r}
+# (State Census) Question: Was there a national census in this year? Clarification: In order to count as a "census", the following four criteria needs to be satisfied: 1. UNIVERSALITY: the census attempted to cover the entire population and not just a sample. 2. INDIVIDUAL ENUMERATION: the census enumerates each individual separately and records his or her characteristics separately. If the census only produces aggregate or summarised information, it is only a population count and should not count as a census. For example, A population count of a household with 4 people would produce the following results: Age—Adults: 2; Children: 2 Sex—Males: 2; Females: 2 Instead, an individual enumeration would look like this: Head of household-male-adult Spouse-female-adult Son-male-child Daughter-female-child The key difference is that only in the individual enumeration the data on various characteristics can be cross-tabulated. 3. DEFINED TERRITORY: The territory covered, along with any changes in its area is clearly stated. 4. SIMULTANEITY AND SPECIFIED TIME: Each person is enumerated as nearly as possible to the same well-defined point in time, and the collected data should refer to a well-defined reference period. Code "1" if a national census was completed in this year – but not if it was aborted or was not national in scope.
+
+ggplot(dataset1, aes(x=v3stcensus, y=log(e_gdppc))) + 
+  geom_point() +
+  labs(title= 'The Effect of State Infrastrcutural Power on Economic Growth', x= 'State Census as a Proxy for State Information (0,1)', y='Log GDP Per Capita') +
+  stat_smooth(method = 'lm')
+ggsave("state.power.on.growth4.png")
+```
+
+
+
+####Regression results for the relationship between State Information Power (Census) and economic growth
+```{r}
+library(plm)
+census_growth1 <- plm(log(e_gdppc) ~ v3stcensus, data = dataset1, 
+               index=c("country_name","year"), model="within", effect = "twoways")
+summary(census_growth1)
+```
+
+####Report the Regression Results in a Table
+```{r}
+stargazer(census_growth1, type = "html",
+          dep.var.labels = c("Economic Grwoth"), title = "Table 2: Regression Results of Bivariate Relationship Between State Information Capacity (Census) and Economic Grwoth",
+          covariate.labels = c("Census (State Information Capacity)"),
+          out = "Table2.html")
+
+```
+
+
+
+
+####Scatterplot of Rulers’ involvement in the state administration (v3struinvadm)=x (As a Proxy for State Information for state Capacity); and GDP Per Capita Growth (log(e_gdppc))=y
+```{r}
+# (Rulers’ involvement in the state administration) Question: To what extent are day-to-day decisions made by state administrators subject to intervention from political elites? Clarification: By political elites we mean members of the executive, members of the legislature and political elites at local and regional levels. Note that the focus on the day-to-day decisions of the state administration implies interference in specific operational decisions in a meticulous manner. Decisions taken by rulers about the general direction of the state administration should not be considered. Note that the question refers to the de facto situation.
+#Responses: 0: Constantly. Day-to-day decisions taken by state administrators are constantly subject to intervention. 1: Often. Day-to-day decisions in the state administration are often subject to intervention. 2: About half. Approximately half of the day-to-day decisions in the state administration are subject to intervention. 3: Occasionally. Day-to-day decisions in the state administration are occasionally subject to intervention. 4: Never, or hardly ever. Day-to-day decisions in the state administration are never or hardly ever subject to intervention.
+
+ggplot(dataset1, aes(x=v3struinvadm, y=log(e_gdppc))) + 
+  geom_point() +
+  labs(title= 'The Effect of State Infrastrcutural Power on Economic Growth', x= 'Rulers’ involvement in the state administration Between 0-4', y='Log GDP Per Capita') +
+  stat_smooth(method = 'lm')
+ggsave("state.power.on.growth5.png")
+```
+
+
+
+
+####Scatterplot of State steering capacity (v3ststeecap)=x (As a Proxy for State Information for state Capacity); and GDP Per Capita Growth (log(e_gdppc))=y
+```{r}
+# Question: Can the state oversee and regulate the economy? Clarification: This refers to the state’s ability to keep track of economic activities in its territory and potentially influence them by shaping the incentives and constraints that private firms face to do business; e.g., through licensing, granting exploitation rights, taxing, imposing market barriers, building infrastructure, offering subsidies, adjudicating conflicts, or enforcing regulations.
+#Responses:
+#0: Most economic activities happen outside the reach of the state
+#1: The state steers some economic activities
+#2: The state steers a substantial share – but less than half – of the national economy
+#3: The state steers about half or more than half, of the national economy
+#4: The state steers all or almost all economic activities
+#Scale: Ordinal.
+
+ggplot(dataset1, aes(x=v3ststeecap_mean, y=log(e_gdppc))) + 
+  geom_point() +
+  labs(title= 'The Effect of State Infrastrcutural Power on Economic Growth', x= 'State steering capacity Between 0-4', y='Log GDP Per Capita') +
+  stat_smooth(method = 'lm')
+ggsave("state.power.on.growth6.png")
+```
+
+
+
+####Regression results for the relationship between State Information Power (State steering capacity) and economic growth
+```{r}
+library(plm)
+steering_growth1 <- plm(log(e_gdppc) ~ v3ststeecap_mean, data = dataset1, 
+               index=c("country_name","year"), model="within", effect = "twoways")
+summary(steering_growth1)
+```
+
+####Report the Regression Results in a Table
+```{r}
+stargazer(steering_growth1, type = "html",
+          dep.var.labels = c("Economic Grwoth"), title = "Table 3: Regression Results of Bivariate Relationship Between State Infrastrcutural Power (State steering capacity to Intervene In the Economy) and Economic Grwoth",
+          covariate.labels = c("State Infrastrcutural Power (State steering capacity to Intervene In the Economy)"),
+          out = "Table3.html")
+
+```
+
+
+```{r}
+#install.packages("TAM")
+citation("TAM")
+# install.packages("TAM")
+library("TAM")
+#install.packages("WrightMap")
+citation("WrightMap")
+# install.packages("WrightMap")
+library("WrightMap") 
+transreas <- read.csv("transreas.csv")
+View(transreas)
+# Remove the Student ID and Grade level variables:
+transreas.responses <- subset(transreas, select = -c(Student, Grade))
+# Check descriptive statistics:
+summary(transreas.responses)
+# Running the Dichotomous Rasch Model
+dichot.transreas <- tam(transreas.responses)
+# Request a summary of the model results
+summary(dichot.transreas)
+# Plot the Wright Map 
+IRT.WrightMap(dichot.transreas, show.thr.lab=FALSE, main.title = "Transitive Reasoning Wright Map")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
