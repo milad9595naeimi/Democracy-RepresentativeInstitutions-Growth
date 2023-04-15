@@ -1,5 +1,4 @@
 ---
-title: "POL443 Research Proposal"
 author: "Milad Naeimi"
 date: "2023-03-08"
 output: pdf_document
@@ -57,13 +56,6 @@ library(scales)
 
 
 
-
-####Setting the root File
-```{r}
-getwd()
-setwd("C:/Users/milad/OneDrive/Desktop/University of Toronto/Courses/2023/Winter/POL443 Topics in Compartive Perspective (State and Development in Historical)/Dataset/V-Dem Datasets/V-Dem-CY-FullOthers_csv_v13")
-getwd()
-```
 
 
 ####Read Data
